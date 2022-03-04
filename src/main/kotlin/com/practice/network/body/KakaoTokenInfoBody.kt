@@ -2,8 +2,8 @@ package com.practice.network.body
 
 @kotlinx.serialization.Serializable
 data class KakaoTokenInfoBody(
-    val id: Long,
-    val expiresInMillis: Long,
-    val appId:Int,
+    val id: Long? = null,
+    val expiresInMillis: Long? = null,
+    val appId:Int? = null,
     val msg: String? = null
 )

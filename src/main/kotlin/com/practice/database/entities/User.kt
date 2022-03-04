@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 // 테이블 명명
 object Users: IntIdTable(){
     val kakaoId = long("kakaoId").nullable().uniqueIndex()
+    val nickname = varchar("nickname", 20)
 }
 // entity는 개체라고 생각하면 된다.
 // Users안에 하나씩 있는 user인거지. 여러개
@@ -16,4 +17,5 @@ object Users: IntIdTable(){
 class User(id: EntityID<Int>): IntEntity(id) {
     companion object: IntEntityClass<User>(Users)
     var kakaoId by Users.kakaoId
+    var nickname by Users.nickname
 }

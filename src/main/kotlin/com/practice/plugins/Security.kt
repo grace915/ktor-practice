@@ -11,11 +11,12 @@ import com.practice.JWT_ISSUER
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
+import java.util.*
 
 fun Application.configureSecurity() {
 
     authentication {
-        jwt {
+        jwt("auth-jwt") {
             //val jwtAudience = environment.config.property("jwt.audience").getString()
             //realm = environment.config.property("jwt.realm").getString()
             verifier(
@@ -34,3 +35,10 @@ fun Application.configureSecurity() {
     }
 
 }
+
+fun makeServerAccessToken(userId: Int) =
+    JWT.create()
+        .withClaim("userId", userId)
+        .withIssuer(JWT_ISSUER)
+        .withExpiresAt(Date(System.currentTimeMillis() + 432000000))
+        .sign(JWT_ALGORITHM)

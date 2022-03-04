@@ -4,6 +4,7 @@ import com.practice.database.Database
 import com.practice.dto.Token
 import com.practice.network.body.KakaoTokenInfoBody
 import com.practice.network.client
+import com.practice.plugins.makeServerAccessToken
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -22,9 +23,18 @@ fun Route.kakaoRouting() {
 
         }.body()
         //?:는 앞이 null이면 실행되는것 엘비스널
-        val user = Database.findUserByKakaoId(kakaoTokenInfo.id)
-            ?: return@post call.respond(status = HttpStatusCode.NotFound, message = "Not Found")
+
         println(kakaoTokenInfo)
-        call.respond(kakaoTokenInfo)
+        // 요청 잘못됨
+        kakaoTokenInfo.msg?.let {
+            return@post call.respond(status = HttpStatusCode.BadRequest, message = it)
+        }
+        // 발견 못함
+        val user = Database.findUserByKakaoId(kakaoTokenInfo.id!!)
+            ?: return@post call.respond(status = HttpStatusCode.NotFound, message = "Not Found")
+
+        // 있으면 accesstoken 만들어서 보내줘야함
+        // user.id.value 가 아이디
+        call.respond(Token(serverAccessToken = makeServerAccessToken(user.id.value)))
     }
 }

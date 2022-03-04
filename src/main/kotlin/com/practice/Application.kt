@@ -9,9 +9,10 @@ import io.ktor.server.engine.*
 fun main() {
 
     embeddedServer(Netty, port = PORT, host = HOST) {
+
         configureDatabase() // database 설정
-        configureRouting()
         configureSecurity()
+        configureRouting()
         configureSerialization()
     }.start(wait = true)
 }
